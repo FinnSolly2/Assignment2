@@ -25,3 +25,6 @@ class CategoryManager:
         if category_name in self.categories:
             return [self.inventory.get_product(pid) for pid in self.categories[category_name].products]
         return []
+
+    def get_categories_amount(self):
+	return len(self.categories)
