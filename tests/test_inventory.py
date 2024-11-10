@@ -58,3 +58,20 @@ class TestStockManager(unittest.TestCase):
         """Test stock level retrieval"""
         self.assertEqual(self.stock_manager.get_stock_level(1), 10)
         self.assertEqual(self.stock_manager.get_stock_level(999), 0)
+
+class TestStockValidation(unittest.TestCase):
+    def setUp(self):
+        self.inventory = InventoryManager()
+        self.stock_manager = StockManager(self.inventory)
+        self.inventory.add_product(1, "Test Product", 10)
+
+    def test_negative_quantities(self):
+        """Test validation against negative quantities"""
+        self.assertFalse(self.stock_manager.add_stock(1, -5))
+        self.assertFalse(self.stock_manager.remove_stock(1, -5))
+        self.assertEqual(self.stock_manager.get_stock_level(1), 10)
+
+    def test_excessive_removal(self):
+        """Test validation against removing more than available"""
+        self.assertFalse(self.stock_manager.remove_stock(1, 15))
+        self.assertEqual(self.stock_manager.get_stock_level(1), 10)
